@@ -1,146 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pearlescent SMP - Minecraft Server</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pearlescent SMP | Official Website</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="nav-container">
-      <a href="#home" class="logo">
-        <span class="logo-icon">🔮</span>
-        <span class="logo-text">PEARLESCENT <span class="accent">SMP</span></span>
-      </a>
-      
-      <button class="hamburger" id="hamburger-btn" aria-label="Toggle Navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+  <div class="site-wrapper">
 
-      <nav class="nav-links" id="nav-links">
-        <a href="#home">Home</a>
-        <a href="#server">Server</a>
-        <a href="#support">Support</a>
-        <a href="#apply">Apply</a>
-        <a href="#discord">Discord</a>
+    <header class="navbar">
+      <nav class="nav-pills">
+        <a href="#home" class="pill-btn active">GAMES ▾</a>
+        <a href="#support" class="pill-btn">SUPPORT ▾</a>
+        <a href="#apply" class="pill-btn">APPLY ▾</a>
+        <a href="#team" class="pill-btn">TEAM ▾</a>
+        <a href="#" id="nav-discord-link" target="_blank" class="pill-btn">DISCORD ▾</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <section id="home" class="hero">
-    <div class="container hero-content">
+    <section id="home" class="hero-frame">
       
-      <div class="server-title-box">
-        <h1 class="hero-title">PEARLESCENT <span class="mc-purple">SMP</span></h1>
-        <p class="hero-description" id="server-desc">Loading server details...</p>
+      <div class="logo-badge">
+        <span class="logo-text">PEARLESCENT</span>
       </div>
 
-      <div class="button-group">
-        <button class="mc-btn mc-btn-green" id="copy-ip-btn">
-          <span class="btn-title">PLAY NOW</span>
-          <span class="btn-subtext" id="ip-display">play.example.com</span>
-        </button>
-        <a href="#" id="hero-discord-link" target="_blank" rel="noopener" class="mc-btn mc-btn-purple">
-          <span class="btn-title">JOIN DISCORD</span>
-          <span class="btn-subtext">Community Chat</span>
-        </a>
+      <div class="hero-media">
+        <video autoplay loop muted playsinline poster="hero-fallback.jpg">
+          <source src="banner.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
       </div>
 
-      <div id="server" class="mc-box status-card">
-        <div class="box-header">
-          <h3>SERVER STATUS</h3>
-          <div id="status-badge" class="badge badge-offline">
-            <span class="dot"></span> <span id="status-text">OFFLINE</span>
-          </div>
-        </div>
-        
-        <div class="status-rows">
-          <div class="status-row">
-            <span class="label">Server IP:</span>
-            <span class="value code" id="card-ip">play.example.com</span>
-          </div>
-          <div class="status-row">
-            <span class="label">Version:</span>
-            <span class="value" id="card-version">1.21.x</span>
-          </div>
-          <div class="status-row">
-            <span class="label">Players Online:</span>
-            <span class="value" id="card-players">0 / 100</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <section id="support" class="section">
-    <div class="container">
-      <div class="mc-box support-box">
-        <h2 class="box-title">SUPPORT THE SERVER</h2>
-        <p class="support-text">
-          Pearlescent SMP is fully community-funded! We do not sell pay-to-win items or ranks. 
-          If you enjoy playing and want to help keep the server online, consider supporting our hardware costs.
+      <div class="hero-caption">
+        <p id="hero-desc-text">
+          Explore your own unique survival world, team up with friends, and build anything you can imagine!
         </p>
+      </div>
 
-        <div class="support-actions">
-          <a href="#" id="kofi-store-link" target="_blank" class="mc-btn mc-btn-gold">
-            <span>☕ DONATE ON KO-FI</span>
-          </a>
+      <div class="hero-action">
+        <button class="accent-btn" id="copy-ip-btn">
+          <span id="btn-label">LET'S PLAY</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+    </section>
+
+    <main class="content-grid">
+
+      <section class="card glass-card">
+        <div class="card-header">
+          <h2>Server Status</h2>
+          <div id="status-badge" class="status-indicator offline">
+            <span class="dot"></span>
+            <span id="status-text">PINGING...</span>
+          </div>
         </div>
-        <p class="disclaimer">All donations go directly toward server hosting and development.</p>
-      </div>
-    </div>
-  </section>
+        <div class="status-details">
+          <div class="status-row">
+            <span>Server IP:</span>
+            <span class="code" id="card-ip">play.example.com</span>
+          </div>
+          <div class="status-row">
+            <span>Version:</span>
+            <span id="card-version">1.21.x</span>
+          </div>
+          <div class="status-row">
+            <span>Players Online:</span>
+            <span id="card-players">0 / 0</span>
+          </div>
+        </div>
+      </section>
 
-  <section id="apply" class="section">
-    <div class="container">
-      <div class="mc-box apply-box">
-        <h2 class="box-title">STAFF APPLICATIONS</h2>
-        <p>Want to join the staff team? We process all staff and builder applications through our custom Discord bot.</p>
-        <a href="#" id="apply-oauth-link" target="_blank" class="mc-btn mc-btn-blue">
-          <span>AUTHORIZE &amp; APPLY VIA DISCORD</span>
+      <section id="support" class="card glass-card">
+        <div class="card-header">
+          <h2>Support Hosting</h2>
+        </div>
+        <p class="card-description">
+          We keep Pearlescent SMP completely free of pay-to-win items! If you'd like to help keep our hardware and hosting running smoothly, consider donating via Ko-fi.
+        </p>
+        <a href="#" id="kofi-link" target="_blank" class="secondary-btn kofi-btn">
+          ☕ Donate on Ko-fi
         </a>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section id="discord" class="section">
-    <div class="container">
-      <div class="mc-box discord-box">
-        <h2 class="box-title">OFFICIAL DISCORD</h2>
-        <p>Connect with other survival players, participate in server events, and get live updates.</p>
-        <a href="#" id="section-discord-link" target="_blank" rel="noopener" class="mc-btn mc-btn-purple">
-          <span>JOIN OUR DISCORD SERVER</span>
+      <section id="apply" class="card glass-card">
+        <div class="card-header">
+          <h2>Staff Applications</h2>
+        </div>
+        <p class="card-description">
+          Ready to join our staff team? Click below to authorize your Discord account and start your application through our custom bot.
+        </p>
+        <a href="#" id="apply-oauth-link" target="_blank" class="secondary-btn discord-btn">
+          <svg class="discord-svg" viewBox="0 0 127.14 96.36"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-19.32-72.1ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+          Authorize & Apply
         </a>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <footer class="footer">
-    <div class="container footer-content">
-      <div class="footer-left">
-        <h4>PEARLESCENT SMP</h4>
-        <p>A classic Minecraft survival multiplayer experience.</p>
-      </div>
-      <div class="footer-mid">
-        <a href="#home">Home</a> |
-        <a href="#support">Support</a> |
-        <a href="#apply">Apply</a> |
-        <a href="#" id="footer-discord-link" target="_blank">Discord</a>
-      </div>
-      <div class="footer-right">
-        <p>&copy; <span id="year"></span> Pearlescent SMP</p>
-        <p class="mojang-notice">Not affiliated with Mojang Studios or Microsoft.</p>
-      </div>
-    </div>
-  </footer>
+      <section id="team" class="card glass-card full-width">
+        <div class="card-header">
+          <h2>Team & Credits</h2>
+        </div>
+        <div class="team-grid">
+          <div class="team-member">
+            <img src="owner.png" alt="Owner" class="member-avatar" id="avatar-owner">
+            <span class="role-tag">OWNER</span>
+            <span class="member-name" id="name-owner">OwnerName</span>
+          </div>
+          <div class="team-member">
+            <img src="provider.png" alt="Provider" class="member-avatar" id="avatar-provider">
+            <span class="role-tag provider">PROVIDER</span>
+            <span class="member-name" id="name-provider">ProviderName</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <span id="year"></span> Pearlescent SMP. Not affiliated with Mojang AB or Microsoft.</p>
+    </footer>
+
+  </div>
 
   <script src="script.js"></script>
 </body>
