@@ -1,146 +1,112 @@
-// js/script.js
+/* ======================================================
+   ADMIN-FRIENDLY CONFIGURATION
+   Change your server info, IP, and links here!
+====================================================== */
+const CONFIG = {
+  serverName: "Pearlescent SMP",
+  minecraftIp: "play.example.com", // Replace with your real IP or domain
+  minecraftVersion: "1.21.x",
+  defaultMaxPlayers: 100,
+  description: "A vibrant, community-driven Minecraft Survival Multiplayer experience.",
+  
+  links: {
+    discordInvite: "https://discord.gg/example", // Replace with your Discord invite
+    applyOAuth: "https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID...", // Your Bot / OAuth link
+    storePackage1: "https://store.example.com/package/1", // Tebex / CraftingStore links
+    storePackage2: "https://store.example.com/package/2",
+  }
+};
 
-// 1. Initialize Configuration Data
-document.addEventListener('DOMContentLoaded', () => {
-    // Populate text from CONFIG
-    document.getElementById('nav-server-name').innerText = CONFIG.serverName;
-    document.getElementById('hero-title').innerText = CONFIG.serverName;
-    document.getElementById('hero-desc').innerText = CONFIG.shortDescription;
-    document.getElementById('display-ip').innerText = CONFIG.serverIP;
-    document.getElementById('display-version').innerText = CONFIG.mcVersion;
-    document.getElementById('footer-name').innerText = CONFIG.serverName;
-    
-    // Populate Links
-    document.getElementById('discord-link').href = CONFIG.discordInvite;
-    document.getElementById('kofi-link').href = CONFIG.kofiUrl;
+/* ======================================================
+   INITIALIZE & POPULATE UI
+====================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  // Populate text elements from Config
+  document.getElementById("server-desc").textContent = CONFIG.description;
+  document.getElementById("ip-display").textContent = CONFIG.minecraftIp;
+  document.getElementById("card-ip").textContent = CONFIG.minecraftIp;
+  document.getElementById("card-version").textContent = CONFIG.minecraftVersion;
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Fetch dynamic data from mock API endpoints
-    fetchServerStatus();
-    fetchStaffData();
+  // Attach Config Links to HTML Elements
+  document.getElementById("hero-discord-link").href = CONFIG.links.discordInvite;
+  document.getElementById("section-discord-link").href = CONFIG.links.discordInvite;
+  document.getElementById("footer-discord-link").href = CONFIG.links.discordInvite;
+  document.getElementById("apply-oauth-link").href = CONFIG.links.applyOAuth;
+  document.getElementById("store-link-1").href = CONFIG.links.storePackage1;
+  document.getElementById("store-link-2").href = CONFIG.links.storePackage2;
+
+  // Fetch Live Minecraft Server Status
+  fetchServerStatus();
+
+  // Setup Copy IP Logic
+  setupCopyIpButton();
+
+  // Mobile Hamburger Menu
+  setupMobileMenu();
 });
 
-// 2. Mobile Navigation Toggle
-document.getElementById('hamburger').addEventListener('click', () => {
-    document.getElementById('nav-links').classList.toggle('active');
-});
-
-// 3. Copy IP Functionality
-function copyIP() {
-    navigator.clipboard.writeText(CONFIG.serverIP).then(() => {
-        const toast = document.getElementById('ip-toast');
-        toast.style.opacity = 1;
-        setTimeout(() => { toast.style.opacity = 0; }, 2000);
-    });
-}
-
-// ==========================================
-// API INTEGRATION PLACEHOLDERS
-// When your Discord bot is ready, replace the 
-// mock data below with actual fetch() requests.
-// ==========================================
-
-// 4. Fetch Server Status
+/* ======================================================
+   FETCH MINECRAFT STATUS (Client-Side API)
+====================================================== */
 async function fetchServerStatus() {
-    try {
-        /* // FUTURE IMPLEMENTATION:
-        const response = await fetch(CONFIG.api.status);
-        const data = await response.json();
-        */
-        
-        // MOCK DATA (Simulating Bot response)
-        const data = {
-            online: true,
-            players: 24,
-            maxPlayers: 100
-        };
+  const badge = document.getElementById("status-badge");
+  const statusText = document.getElementById("status-text");
+  const playersText = document.getElementById("card-players");
 
-        const dot = document.getElementById('status-dot');
-        const text = document.getElementById('status-text');
-        const count = document.getElementById('player-count');
+  try {
+    // Pings free public API directly from user's browser
+    const response = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.minecraftIp}`);
+    const data = await response.json();
 
-        if (data.online) {
-            dot.classList.add('online');
-            dot.classList.remove('offline');
-            text.innerText = "Online";
-            count.innerText = `${data.players} / ${data.maxPlayers}`;
-        } else {
-            dot.classList.add('offline');
-            dot.classList.remove('online');
-            text.innerText = "Offline";
-            count.innerText = "0 / 0";
-        }
-    } catch (error) {
-        console.error("Error fetching server status:", error);
+    if (data.online) {
+      badge.className = "badge badge-online";
+      statusText.textContent = "Online";
+      playersText.textContent = `${data.players.online} / ${data.players.max}`;
+    } else {
+      setOfflineState();
     }
+  } catch (error) {
+    // Graceful fallback if API fails
+    setOfflineState();
+  }
+
+  function setOfflineState() {
+    badge.className = "badge badge-offline";
+    statusText.textContent = "Offline";
+    playersText.textContent = `0 / ${CONFIG.defaultMaxPlayers}`;
+  }
 }
 
-// 5. Fetch Staff Data
-async function fetchStaffData() {
-    try {
-        /*
-        // FUTURE IMPLEMENTATION:
-        const response = await fetch(CONFIG.api.staff);
-        const data = await response.json();
-        */
-        
-        // MOCK DATA (Simulating Bot response format you requested)
-        const data = {
-            owner: [{ username: "Notch", avatar: "https://mc-heads.net/avatar/Notch/80" }],
-            provider: [{ username: "HostAdmin", avatar: "https://mc-heads.net/avatar/Steve/80" }],
-            staff: [
-                { username: "ModAlex", avatar: "https://mc-heads.net/avatar/Alex/80" },
-                { username: "HelperDan", avatar: "https://mc-heads.net/avatar/DanTDM/80" }
-            ]
-        };
+/* ======================================================
+   CLICK TO COPY IP
+====================================================== */
+function setupCopyIpButton() {
+  const copyBtn = document.getElementById("copy-ip-btn");
+  const ipSubtext = document.getElementById("ip-display");
 
-        const container = document.getElementById('staff-container');
-        container.innerHTML = ""; // Clear loader
+  copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(CONFIG.minecraftIp).then(() => {
+      const originalText = ipSubtext.textContent;
+      ipSubtext.textContent = "IP Copied to Clipboard!";
+      ipSubtext.style.color = "#e0aaff";
 
-        // Helper function to build staff cards
-        const createCard = (user, roleClass, roleName) => `
-            <div class="staff-card">
-                <img src="${user.avatar}" alt="${user.username}" class="staff-avatar">
-                <h3>${user.username}</h3>
-                <p class="${roleClass}">${roleName}</p>
-            </div>
-        `;
-
-        data.owner.forEach(u => container.innerHTML += createCard(u, 'role-owner', 'Owner'));
-        data.provider.forEach(u => container.innerHTML += createCard(u, 'role-provider', 'Provider'));
-        data.staff.forEach(u => container.innerHTML += createCard(u, 'role-staff', 'Staff'));
-
-    } catch (error) {
-        console.error("Error fetching staff:", error);
-        document.getElementById('staff-container').innerHTML = "<p>Could not load staff data.</p>";
-    }
+      setTimeout(() => {
+        ipSubtext.textContent = originalText;
+        ipSubtext.style.color = "";
+      }, 2000);
+    });
+  });
 }
 
-// 6. Application System (OAuth Mock)
-function mockDiscordLogin() {
-    /*
-    // FUTURE IMPLEMENTATION:
-    // Redirect user to Discord OAuth URL:
-    // window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CONFIG.oauth.clientId}&redirect_uri=${CONFIG.oauth.redirectUri}&response_type=code&scope=identify`;
-    */
-    
-    // MOCK LOGIN FLOW
-    document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('app-form').classList.remove('hidden');
-}
+/* ======================================================
+   MOBILE MENU TOGGLE
+====================================================== */
+function setupMobileMenu() {
+  const btn = document.getElementById("hamburger-btn");
+  const nav = document.getElementById("nav-links");
 
-function submitApplication() {
-    const text = document.querySelector('#app-form textarea').value;
-    if(text.trim() === "") return alert("Please fill out the application.");
-
-    /*
-    // FUTURE IMPLEMENTATION:
-    // POST request to your Discord Bot/API containing the user's OAuth token and application text.
-    */
-
-    alert("Application successfully sent to the Discord moderation team!");
-    document.querySelector('#app-form textarea').value = "";
-    
-    // Reset form for demo
-    document.getElementById('auth-section').classList.remove('hidden');
-    document.getElementById('app-form').classList.add('hidden');
+  btn.addEventListener("click", () => {
+    nav.classList.toggle("active");
+  });
 }
