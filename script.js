@@ -5,7 +5,6 @@
 const CONFIG = {
   serverName: "Pearlescent SMP",
   minecraftIp: "play.example.com", // Replace with your real IP or domain
-  apiPort: 8080, // Matches your plugin's config.yml api-port
   defaultMaxPlayers: 100,
   description: "A vibrant, community-driven Minecraft Survival Multiplayer experience.",
   
@@ -33,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("apply-oauth-link").href = CONFIG.links.applyOAuth;
   document.getElementById("store-link-kofi").href = CONFIG.links.kofiStore;
 
-  // Fetch Live Minecraft Server Status from your Plugin Web API
+  // Fetch Live Minecraft Server Status securely over HTTPS
   fetchServerStatus();
 
   // Setup Copy IP Logic
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ======================================================
-   FETCH MINECRAFT STATUS (From your Plugin Web API)
+   FETCH MINECRAFT STATUS (Secure HTTPS Public API)
 ====================================================== */
 async function fetchServerStatus() {
   const badge = document.getElementById("status-badge");
@@ -53,20 +52,21 @@ async function fetchServerStatus() {
   const versionText = document.getElementById("card-version");
 
   try {
-    // Calls your custom Minecraft plugin's HTTP server
-    const response = await fetch(`http://${CONFIG.minecraftIp}:${CONFIG.apiPort}/api/status`);
+    // Uses HTTPS endpoint to bypass browser mixed-content security blocks
+    const response = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.minecraftIp}`);
     const data = await response.json();
 
-    if (data.status === "Online") {
+    if (data.online) {
       badge.className = "badge badge-online";
       statusText.textContent = "Online";
-      playersText.textContent = `${data.players} / ${data.max_players}`;
-      versionText.textContent = data.version;
+      playersText.textContent = `${data.players.online} / ${data.players.max}`;
+      if (versionText && data.version) {
+        versionText.textContent = data.version;
+      }
     } else {
       setOfflineState();
     }
   } catch (error) {
-    // Graceful fallback if server is offline or port isn't accessible
     setOfflineState();
   }
 
