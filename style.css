@@ -240,6 +240,10 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
 }
+.single-card-layout {
+  max-width: 450px;
+  margin: 0 auto;
+}
 .card { padding: 30px; position: relative; }
 .highlight-card { border-color: var(--primary-violet); }
 .card-tag {
@@ -255,7 +259,7 @@ body {
 }
 .price { font-size: 2rem; font-weight: 800; margin: 15px 0; }
 .price span { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
-.benefits-list { list-style: none; space-y: 10px; }
+.benefits-list { list-style: none; }
 .benefits-list li { margin-bottom: 10px; color: var(--text-muted); font-size: 0.95rem; }
 
 .disclaimer-note {
