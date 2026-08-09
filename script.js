@@ -1,47 +1,39 @@
 /* ======================================================
-   ADMIN CONFIGURATION
-   Change server settings & links here easily!
+   CONFIG
 ====================================================== */
 const CONFIG = {
   serverName: "Pearlescent SMP",
-  minecraftIp: "play.example.com", // Change to your server IP
+  minecraftIp: "play.example.com", // Replace with your IP
   minecraftVersion: "1.21.x",
-  maxPlayers: 100,
-  description: "A community-driven Minecraft Survival Multiplayer server.",
+  defaultMaxPlayers: 100,
   
   links: {
-    discordInvite: "https://discord.gg/example", // Discord server invite
-    applyOAuth: "https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID...", // Discord Bot link
-    kofiDonate: "https://ko-fi.com/YOUR_KOFI_HANDLE", // Ko-fi support link
+    discordInvite: "https://discord.gg/example",
+    applyOAuth: "https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID...",
+    kofi: "https://ko-fi.com/YOUR_KOFI_HANDLE"
   }
 };
 
 /* ======================================================
-   INITIALIZE WEBSITE
+   INITIALIZATION
 ====================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  // Set Text Content from Config
-  document.getElementById("server-desc").textContent = CONFIG.description;
-  document.getElementById("ip-display").textContent = CONFIG.minecraftIp;
+  // Populate static fields & links
   document.getElementById("card-ip").textContent = CONFIG.minecraftIp;
   document.getElementById("card-version").textContent = CONFIG.minecraftVersion;
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Set Links
-  document.getElementById("hero-discord-link").href = CONFIG.links.discordInvite;
-  document.getElementById("section-discord-link").href = CONFIG.links.discordInvite;
-  document.getElementById("footer-discord-link").href = CONFIG.links.discordInvite;
+  document.getElementById("nav-discord-link").href = CONFIG.links.discordInvite;
   document.getElementById("apply-oauth-link").href = CONFIG.links.applyOAuth;
-  document.getElementById("kofi-store-link").href = CONFIG.links.kofiDonate;
+  document.getElementById("kofi-link").href = CONFIG.links.kofi;
 
-  // Initialize Functions
+  // Initialize features
   fetchServerStatus();
-  setupCopyIpButton();
-  setupMobileMenu();
+  setupCopyIp();
 });
 
 /* ======================================================
-   FETCH MINECRAFT STATUS (Public Client API)
+   LIVE MINECRAFT STATUS
 ====================================================== */
 async function fetchServerStatus() {
   const badge = document.getElementById("status-badge");
@@ -49,56 +41,42 @@ async function fetchServerStatus() {
   const playersText = document.getElementById("card-players");
 
   try {
-    const response = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.minecraftIp}`);
-    const data = await response.json();
+    const res = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.minecraftIp}`);
+    const data = await res.json();
 
     if (data.online) {
-      badge.className = "badge badge-online";
+      badge.className = "status-indicator online";
       statusText.textContent = "ONLINE";
       playersText.textContent = `${data.players.online} / ${data.players.max}`;
     } else {
       setOffline();
     }
-  } catch (error) {
+  } catch (err) {
     setOffline();
   }
 
   function setOffline() {
-    badge.className = "badge badge-offline";
+    badge.className = "status-indicator offline";
     statusText.textContent = "OFFLINE";
-    playersText.textContent = `0 / ${CONFIG.maxPlayers}`;
+    playersText.textContent = `0 / ${CONFIG.defaultMaxPlayers}`;
   }
 }
 
 /* ======================================================
-   COPY IP BUTTON
+   COPY IP ACTION
 ====================================================== */
-function setupCopyIpButton() {
-  const copyBtn = document.getElementById("copy-ip-btn");
-  const ipSubtext = document.getElementById("ip-display");
-
-  copyBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(CONFIG.minecraftIp).then(() => {
-      const originalText = ipSubtext.textContent;
-      ipSubtext.textContent = "COPIED TO CLIPBOARD!";
-      ipSubtext.style.color = "#4ade80";
-
-      setTimeout(() => {
-        ipSubtext.textContent = originalText;
-        ipSubtext.style.color = "";
-      }, 2000);
-    });
-  });
-}
-
-/* ======================================================
-   MOBILE MENU TOGGLE
-====================================================== */
-function setupMobileMenu() {
-  const btn = document.getElementById("hamburger-btn");
-  const nav = document.getElementById("nav-links");
+function setupCopyIp() {
+  const btn = document.getElementById("copy-ip-btn");
+  const label = document.getElementById("btn-label");
 
   btn.addEventListener("click", () => {
-    nav.classList.toggle("active");
+    navigator.clipboard.writeText(CONFIG.minecraftIp).then(() => {
+      const originalText = label.textContent;
+      label.textContent = "IP COPIED!";
+
+      setTimeout(() => {
+        label.textContent = originalText;
+      }, 2000);
+    });
   });
 }
