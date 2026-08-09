@@ -5,15 +5,14 @@
 const CONFIG = {
   serverName: "Pearlescent SMP",
   minecraftIp: "play.example.com", // Replace with your real IP or domain
-  minecraftVersion: "1.21.x",
+  apiPort: 8080, // Matches your plugin's config.yml api-port
   defaultMaxPlayers: 100,
   description: "A vibrant, community-driven Minecraft Survival Multiplayer experience.",
   
   links: {
     discordInvite: "https://discord.gg/example", // Replace with your Discord invite
     applyOAuth: "https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID...", // Your Bot / OAuth link
-    storePackage1: "https://store.example.com/package/1", // Tebex / CraftingStore links
-    storePackage2: "https://store.example.com/package/2",
+    kofiStore: "https://ko-fi.com/YOUR_KOFI_USERNAME", // Your Ko-fi donation link
   }
 };
 
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("server-desc").textContent = CONFIG.description;
   document.getElementById("ip-display").textContent = CONFIG.minecraftIp;
   document.getElementById("card-ip").textContent = CONFIG.minecraftIp;
-  document.getElementById("card-version").textContent = CONFIG.minecraftVersion;
   document.getElementById("year").textContent = new Date().getFullYear();
 
   // Attach Config Links to HTML Elements
@@ -33,10 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("section-discord-link").href = CONFIG.links.discordInvite;
   document.getElementById("footer-discord-link").href = CONFIG.links.discordInvite;
   document.getElementById("apply-oauth-link").href = CONFIG.links.applyOAuth;
-  document.getElementById("store-link-1").href = CONFIG.links.storePackage1;
-  document.getElementById("store-link-2").href = CONFIG.links.storePackage2;
+  document.getElementById("store-link-kofi").href = CONFIG.links.kofiStore;
 
-  // Fetch Live Minecraft Server Status
+  // Fetch Live Minecraft Server Status from your Plugin Web API
   fetchServerStatus();
 
   // Setup Copy IP Logic
@@ -47,27 +44,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ======================================================
-   FETCH MINECRAFT STATUS (Client-Side API)
+   FETCH MINECRAFT STATUS (From your Plugin Web API)
 ====================================================== */
 async function fetchServerStatus() {
   const badge = document.getElementById("status-badge");
   const statusText = document.getElementById("status-text");
   const playersText = document.getElementById("card-players");
+  const versionText = document.getElementById("card-version");
 
   try {
-    // Pings free public API directly from user's browser
-    const response = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.minecraftIp}`);
+    // Calls your custom Minecraft plugin's HTTP server
+    const response = await fetch(`http://${CONFIG.minecraftIp}:${CONFIG.apiPort}/api/status`);
     const data = await response.json();
 
-    if (data.online) {
+    if (data.status === "Online") {
       badge.className = "badge badge-online";
       statusText.textContent = "Online";
-      playersText.textContent = `${data.players.online} / ${data.players.max}`;
+      playersText.textContent = `${data.players} / ${data.max_players}`;
+      versionText.textContent = data.version;
     } else {
       setOfflineState();
     }
   } catch (error) {
-    // Graceful fallback if API fails
+    // Graceful fallback if server is offline or port isn't accessible
     setOfflineState();
   }
 
