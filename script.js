@@ -4,7 +4,7 @@
 ====================================================== */
 const CONFIG = {
   serverName: "Pearlescent SMP",
-  minecraftIp: "play.example.com", // Replace with your real IP or domain
+  minecraftIp: "136.243.150.30:60460", // Replace with your real IP or domain
   defaultMaxPlayers: 100,
   description: "A vibrant, community-driven Minecraft Survival Multiplayer experience.",
   
