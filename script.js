@@ -9,7 +9,7 @@ const CONFIG = {
   description: "A vibrant, community-driven Minecraft Survival Multiplayer experience.",
   
   links: {
-    discordInvite: "https://discord.gg/example", // Replace with your Discord invite
+    discordInvite: "https://discord.gg/fGZ3errgkK", // Replace with your Discord invite
     applyOAuth: "https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID...", // Your Bot / OAuth link
     kofiStore: "https://ko-fi.com/YOUR_KOFI_USERNAME", // Your Ko-fi donation link
   }
